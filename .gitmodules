@@ -1,0 +1,4 @@
+[submodule "slint"]
+	path = slint
+	url = https://github.com/JonasOuellet/slint.git
+	branch = backend_builder_winit

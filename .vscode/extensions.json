@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "slint.slint",
+        "rust-lang.rust-analyzer"
+    ]
+}
