@@ -127,7 +127,7 @@ pub enum JAppEvent {
 
 #[derive(Serialize, Deserialize)]
 pub struct JAppState {
-    current_device: Option<String>,
+    pub current_device: Option<String>,
     pub stop_audio_on_release: bool
 }
 
@@ -239,7 +239,7 @@ impl JApp {
 
     pub fn save_state(&self) {
         if let Err(e) = std::fs::write(
-            std::path::Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/app_state.json")),
+            std::path::Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/app_state.json")),
             serde_json::to_string(&self.state).unwrap()
         ) {
             println!("Error saving app sate: {e:?}");

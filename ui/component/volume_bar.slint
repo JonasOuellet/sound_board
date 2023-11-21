@@ -1,0 +1,18 @@
+export component VolumeBar inherits Rectangle {
+    in property <int> start: 0;
+    in property <int> end: 8;
+    in property <bool> is_over;
+    in property <int> volume;
+    width: 8px;
+    clip: true;
+    background: #000000;
+    border-radius: 3px;
+    border-width: 2px;
+    border-color: #000000;
+    Rectangle {
+        x: -8px + (Math.min(1.0, Math.max(root.volume - start, 0) / (end - start)) * 8px);
+        width: parent.width;
+        height: parent.height;
+        background: parent.is-over ? #ffd000: #00ff00;
+    }
+}

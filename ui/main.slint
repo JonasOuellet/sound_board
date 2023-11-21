@@ -1,0 +1,39 @@
+import { ComboBox, Slider} from "std-widgets.slint";
+import { Volume } from "./widget/volume.slint";
+
+
+export component JAppUISlint inherits Window {
+    in property <[string]> output-devices;
+    in-out property <string> current_output_device <=> device-cb.current-value;
+    in-out property <int> volume;
+
+
+    VerticalLayout {
+        padding: 20px;
+        spacing: 20px;
+        HorizontalLayout {
+            spacing: 10px;
+            Text {
+                text: "Device:";
+                vertical-alignment: center;
+            }
+            device-cb := ComboBox {
+                model: root.output-devices;
+                height: 20px;
+            }
+        }
+        HorizontalLayout {
+            spacing: 10px;
+
+            VerticalLayout {
+                Text {
+                    text: "Volume: ";
+                    vertical-alignment: center;
+                }
+            }
+            Volume {
+                volume <=> root.volume;
+            }
+        }
+    }
+}

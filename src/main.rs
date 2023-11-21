@@ -1,5 +1,3 @@
-use slint::ComponentHandle;
-
 use tray_icon::{
     menu::{Menu, MenuEvent, MenuItem},
     TrayIconBuilder
@@ -85,11 +83,11 @@ fn main() {
 
     let menu_channel = MenuEvent::receiver();
     // let tray_channel = TrayIconEvent::receiver();
-    let mut window: Option<JAppUI> = None;
+    let mut app_ui = JAppUI::new();
     let backend = i_slint_backend_winit::BackendBuilder::new()
         .with_quit_on_last_window(false)
         .with_msg_hook(|msg| JGlobalHotkeyManager::process_msg(msg))
-        .with_pre_callback(move |_, _| 
+        .with_pre_callback(move |_, event_loop_target| 
             {
                 if app.process_events() {
                     return true;
@@ -98,19 +96,16 @@ fn main() {
                 if let Ok(event) = menu_channel.try_recv() {
                     match tray_menu.action_from_event(&event) {
                         TrayAction::ShowWindow => {
-                            match window.as_mut() {
-                                Some(ui) => ui.show().unwrap(),
-                                None => {
-                                    let app = JAppUI::new().unwrap();
-                                    app.show().unwrap();
-                                    window = Some(app);
+                            if app_ui.show() {
+                                app_ui.set_devices(JApp::get_ouptut_audio_devices().as_slice());
+                                if let Some(device) = app.state.current_device.as_ref() {
+                                    app_ui.set_current_device(device);
                                 }
                             }
                         },
                         TrayAction::Close => {
-                            if let Some(win) = window.as_mut() {
-                                win.hide().unwrap();
-                            }
+                            app.save_state();
+                            event_loop_target.exit();
                         }
                         _ => ()
                     }

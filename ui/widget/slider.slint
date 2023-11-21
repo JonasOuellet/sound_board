@@ -1,0 +1,34 @@
+export component MySlider inherits Rectangle {
+    in-out property<int> maximum: 100;
+    in-out property<int> minimum: 0;
+    in-out property<int> value: 0;
+
+    min-height: 24px;
+    min-width: 100px;
+    horizontal-stretch: 1;
+    vertical-stretch: 0;
+
+    border-radius: root.height/2;
+    background: touch.pressed ? #eee: #ddd;
+    border-width: 1px;
+    border-color: root.background.darker(25%);
+
+    handle := Rectangle {
+        width: self.height;
+        height: parent.height;
+        border-width: 3px;
+        border-radius: self.height / 2;
+        background: touch.pressed ? #88ffb6: touch.has-hover ? #66ffa6 : #3cff00;
+        border-color: self.background.darker(15%);
+        x: (root.width - handle.width) * (root.value - root.minimum)/(root.maximum - root.minimum);
+
+        touch := TouchArea {
+            moved => {
+                if (self.enabled && self.pressed) {
+                    root.value = max(root.minimum, min(root.maximum,
+                        root.value + (self.mouse-x - self.pressed-x) * (root.maximum - root.minimum) / root.width));
+                }
+            }
+        }
+    }
+}
